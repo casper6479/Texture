@@ -9,8 +9,6 @@
 
 #import <AsyncDisplayKit/ASVideoNode.h>
 
-#if AS_USE_VIDEO
-
 #import <AVFoundation/AVFoundation.h>
 #import <AsyncDisplayKit/ASDisplayNode+FrameworkPrivate.h>
 #import <AsyncDisplayKit/ASDisplayNode+Subclasses.h>
@@ -167,16 +165,17 @@ static NSString * const kRate = @"rate";
   if (_player != nil) {
     [_player replaceCurrentItemWithPlayerItem:playerItem];
   } else {
-    self.player = [AVPlayer playerWithPlayerItem:playerItem];
+    self.player = [AVPlayer playerWithPlayerItem:nil];
+      [self.player replaceCurrentItemWithPlayerItem:playerItem];
   }
 
   if (_delegateFlags.delegateVideoNodeDidSetCurrentItem) {
     [self.delegate videoNode:self didSetCurrentItem:playerItem];
   }
 
-  if (self.image == nil && self.URL == nil) {
-    [self generatePlaceholderImage];
-  }
+//  if (self.image == nil && self.URL == nil) {
+//    [self generatePlaceholderImage];
+//  }
 }
 
 - (void)addPlayerItemObservers:(AVPlayerItem *)playerItem
@@ -338,9 +337,9 @@ static NSString * const kRate = @"rate";
           }
         }
         // If we don't yet have a placeholder image update it now that we should have data available for it
-        if (self.image == nil && self.URL == nil) {
-          [self generatePlaceholderImage];
-        }
+//        if (self.image == nil && self.URL == nil) {
+//          [self generatePlaceholderImage];
+//        }
       }
     } else if ([keyPath isEqualToString:kPlaybackLikelyToKeepUpKey]) {
       BOOL likelyToKeepUp = [change[NSKeyValueChangeNewKey] boolValue];
@@ -548,7 +547,7 @@ static NSString * const kRate = @"rate";
   
   {
     ASLockScopeSelf();
-    self.videoPlaceholderImage = nil;
+//    self.videoPlaceholderImage = nil;
     _asset = asset;
     _assetURL = assetURL;
   }
@@ -857,5 +856,3 @@ static NSString * const kRate = @"rate";
 }
 
 @end
-
-#endif
