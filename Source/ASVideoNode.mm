@@ -117,6 +117,7 @@ static NSString * const kRate = @"rate";
     AVPlayerLayer *playerLayer = [[AVPlayerLayer alloc] init];
     playerLayer.player = weakSelf.player;
     playerLayer.videoGravity = weakSelf.gravity;
+    playerLayer.speed = 10000;
     return playerLayer;
   }];
 }
