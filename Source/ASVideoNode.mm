@@ -137,6 +137,7 @@ static NSString * const kRate = @"rate";
 
   playerItem.videoComposition = _videoComposition;
   playerItem.audioMix = _audioMix;
+  playerItem.preferredForwardBufferDuration = 1.0f;
   return playerItem;
 }
 
@@ -412,7 +413,7 @@ static NSString * const kRate = @"rate";
       [self.delegate videoNodeDidStartInitialLoading:self];
   }
   
-  NSArray<NSString *> *requestedKeys = @[@"playable"];
+  NSArray<NSString *> *requestedKeys = @[@"playable", @"duration", @"tracks"];
   [asset loadValuesAsynchronouslyForKeys:requestedKeys completionHandler:^{
     ASPerformBlockOnMainThread(^{
       if (_delegateFlags.delegateVideoNodeDidFinishInitialLoading) {
@@ -826,6 +827,7 @@ static NSString * const kRate = @"rate";
 
   _player = player;
   player.muted = _muted;
+  player.automaticallyWaitsToMinimizeStalling = false;
   ((AVPlayerLayer *)_playerNode.layer).player = player;
 
   if (player != nil) {
