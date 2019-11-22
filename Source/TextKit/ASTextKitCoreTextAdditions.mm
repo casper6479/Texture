@@ -13,7 +13,6 @@
 
 #import <CoreText/CTFont.h>
 #import <CoreText/CTStringAttributes.h>
-#import <AsyncDisplayKit/ASAssert.h>
 
 #pragma mark - Public
 BOOL ASAttributeWithNameIsUnsupportedCoreTextAttribute(NSString *attributeName)
@@ -69,23 +68,7 @@ NSDictionary *NSAttributedStringAttributesForCoreTextAttributes(NSDictionary *co
     if ([coreTextKey isEqualToString:(NSString *)kCTFontAttributeName]) {
       // Its reference type, CTFontRef, is toll-free bridged with UIFont in iOS and NSFont in OS X
       CTFontRef coreTextFont = (__bridge CTFontRef)coreTextValue;
-      NSString *fontName = (__bridge_transfer NSString *)CTFontCopyPostScriptName(coreTextFont);
-      CGFloat fontSize = CTFontGetSize(coreTextFont);
-      UIFont *font = [UIFont fontWithName:fontName size:fontSize];
-      ASDisplayNodeCAssertNotNil(font, @"unable to load font %@ with size %f", fontName, fontSize);
-      if (font == nil || ![font.familyName isEqualToString:fontName]) {
-        // Gracefully fail if we were unable to load the font.
-        // Additionally UIFont is returning a different font family than expected, fallback to the system font
-        CTFontSymbolicTraits symbolicTraits = CTFontGetSymbolicTraits(coreTextFont);
-          if (symbolicTraits & kCTFontTraitItalic) {
-              font = [UIFont italicSystemFontOfSize:fontSize];
-          } else if (symbolicTraits & kCTFontTraitBold) {
-              font = [UIFont boldSystemFontOfSize:fontSize];
-          } else {
-              font = [UIFont systemFontOfSize:fontSize];
-          }
-      }
-      cleanAttributes[NSFontAttributeName] = font;
+      cleanAttributes[NSFontAttributeName] = (__bridge UIFont *)coreTextFont;
     }
     // kCTKernAttributeName -> NSKernAttributeName
     else if ([coreTextKey isEqualToString:(NSString *)kCTKernAttributeName]) {
