@@ -13,6 +13,7 @@
 
 #import <CoreText/CTFont.h>
 #import <CoreText/CTStringAttributes.h>
+#import <AsyncDisplayKit/ASAssert.h>
 
 #pragma mark - Public
 BOOL ASAttributeWithNameIsUnsupportedCoreTextAttribute(NSString *attributeName)
